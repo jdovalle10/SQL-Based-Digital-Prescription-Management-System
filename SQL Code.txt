@@ -1,0 +1,556 @@
+
+The queries can be tested on DB fiddle. Please use following link to test:
+
+https://www.db-fiddle.com/f/54RwBKU89tShGbZ5T5Xbm1/69
+
+############################################## Using DDL to create tables based on our Relational Schema  ############################################
+
+-- Table: Patient 
+CREATE TABLE Patient ( 
+    patient_id INT PRIMARY KEY, 
+    patient_name VARCHAR(100), 
+    patient_dob DATE, 
+    patient_gender VARCHAR(10), 
+    patient_phone VARCHAR(15), 
+    patient_height DECIMAL(5,2), 
+    patient_weight DECIMAL(5,2), 
+    patient_address VARCHAR(255) 
+); 
+  
+  
+-- Table: Hospital 
+ 
+CREATE TABLE Hospital ( 
+    hospital_id INT PRIMARY KEY, 
+    hospital_name VARCHAR(100), 
+    hospital_address VARCHAR(255), 
+    hospital_phone VARCHAR(15), 
+    hospital_is_private BOOLEAN 
+); 
+  
+-- Table: Doctor 
+CREATE TABLE Doctor ( 
+    doctor_id INT PRIMARY KEY, 
+    doctor_name VARCHAR(100), 
+    doctor_phone VARCHAR(15), 
+    doctor_speciality VARCHAR(100), 
+    hospital_id INT, 
+    FOREIGN KEY (hospital_id) REFERENCES Hospital(hospital_id) 
+); 
+  
+  
+-- Table: Drug 
+CREATE TABLE Drug ( 
+    drug_id INT PRIMARY KEY, 
+    drug_name VARCHAR(100), 
+    drug_manufacturer VARCHAR(100), 
+    drug_category VARCHAR(50), 
+    drug_instructions TEXT, 
+    drug_RRP DECIMAL(10,2) -- Recommended Retail Price 
+); 
+  
+  
+-- Table: Pharmacy 
+CREATE TABLE Pharmacy ( 
+    pharmacy_id INT PRIMARY KEY, 
+    pharmacy_name VARCHAR(100), 
+    pharmacy_address VARCHAR(255), 
+    pharmacy_phone VARCHAR(15) 
+); 
+  
+  
+-- Table: Prescription 
+CREATE TABLE Prescription ( 
+    prescription_id INT PRIMARY KEY, 
+    prescription_date DATE, 
+    prescription_priority_status BOOLEAN, 
+    prescription_expiry_date DATE, 
+    patient_id INT, 
+    doctor_id INT, 
+    FOREIGN KEY (patient_id) REFERENCES Patient(patient_id), 
+    FOREIGN KEY (doctor_id) REFERENCES Doctor(doctor_id) 
+); 
+  
+  
+-- Table: Order 
+CREATE TABLE Order_tab (  
+    prescription_id INT,  
+    drug_id INT, 
+    duration INT,  
+    frequency INT,  
+    Quantity INT,  
+    FOREIGN KEY (prescription_id) REFERENCES Prescription(prescription_id), 
+    FOREIGN KEY (drug_id) REFERENCES Drug(drug_id), 
+    PRIMARY KEY (prescription_id, drug_id)  
+); 
+  
+  
+-- Table: Pharmacy_Drug_Listing 
+CREATE TABLE Pharmacy_Drug_Listing (  
+    pharmacy_id INT, 
+    drug_id INT, 
+    quantity INT,  
+    price DECIMAL(10,2),  
+    expiration_date DATE,  
+    FOREIGN KEY (drug_id) REFERENCES Drug (drug_id),  
+    FOREIGN KEY (pharmacy_id) REFERENCES Pharmacy (pharmacy_id), 
+    PRIMARY KEY (pharmacy_id, drug_id)  
+); 
+ 
+-- Table: Prescription_Drug_Order 
+CREATE TABLE Prescription_Drug_Order ( 
+    pharmacy_id INT, 
+    drug_id INT, 
+    prescription_id INT, 
+    FOREIGN KEY (pharmacy_id, drug_id) REFERENCES Pharmacy_Drug_Listing (pharmacy_id, drug_id), 
+    FOREIGN KEY (prescription_id) REFERENCES Order_tab(prescription_id), 
+    PRIMARY KEY (pharmacy_id, drug_id, prescription_id) 
+); 
+
+
+############################################### Using DML to insert values into tables created above ##################################################
+
+
+-- Patient table (10 records)
+
+INSERT INTO Patient (patient_id, patient_name, patient_dob, patient_gender, patient_phone, patient_height, patient_weight, patient_address) VALUES
+(1, 'John Doe', '1980-05-15', 'Male', '123-456-7890', 175.5, 75.0, '123 Main St, Anytown, USA'),
+(2, 'Jane Smith', '1992-09-22', 'Female', '987-654-3210', 162.0, 58.5, '456 Elm St, Othertown, USA'),
+(3, 'Michael Johnson', '1975-03-10', 'Male', '555-123-4567', 180.0, 85.2, '789 Oak Ave, Somewhere, USA'),
+(4, 'Emily Brown', '1988-11-30', 'Female', '444-555-6666', 168.5, 62.0, '321 Pine Rd, Anywhere, USA'),
+(5, 'David Lee', '1995-07-18', 'Male', '777-888-9999', 172.0, 70.5, '654 Maple Ln, Nowhere, USA'),
+(6, 'Sarah Wilson', '1983-01-25', 'Female', '111-222-3333', 165.0, 55.8, '987 Cedar Blvd, Someplace, USA'),
+(7, 'Robert Taylor', '1970-12-05', 'Male', '999-000-1111', 178.5, 88.0, '147 Birch St, Thattown, USA'),
+(8, 'Lisa Anderson', '1990-06-20', 'Female', '222-333-4444', 170.0, 63.5, '258 Spruce Ave, Thistown, USA'),
+(9, 'Thomas Martinez', '1985-04-12', 'Male', '666-777-8888', 176.0, 79.5, '369 Fir Rd, Yourtown, USA'),
+(10, 'Jennifer Garcia', '1993-08-08', 'Female', '333-444-5555', 163.5, 57.0, '741 Redwood Ln, Mytown, USA');
+
+-- Hospital Table (10 records)
+
+INSERT INTO Hospital (hospital_id, hospital_name, hospital_address, hospital_phone, hospital_is_private) VALUES
+(1, 'City General Hospital', '1000 Hospital Rd, Metropolis, USA', '111-222-3333', false),
+(2, 'Sunshine Private Clinic', '2000 Health Ave, Sunnyville, USA', '444-555-6666', true),
+(3, 'Greenwood Medical Center', '3000 Healing Blvd, Greentown, USA', '777-888-9999', false),
+(4, 'Riverside Community Hospital', '4000 River Rd, Riverside, USA', '123-456-7890', false),
+(5, 'Mountain View Hospital', '5000 Peak St, Hillcity, USA', '987-654-3210', true),
+(6, 'Oceanside Health Institute', '6000 Beach Ave, Coastville, USA', '555-666-7777', true),
+(7, 'Central State Medical Facility', '7000 Main St, Centralburg, USA', '333-444-5555', false),
+(8, 'Lakeside Wellness Center', '8000 Lake Dr, Laketown, USA', '888-999-0000', true),
+(9, 'Prairie Regional Hospital', '9000 Grass Rd, Prairieville, USA', '222-333-4444', false),
+(10, 'Forest Grove General Hospital', '10000 Wood St, Forestville, USA', '666-777-8888', false);
+
+-- Doctor Table (10 records)
+
+INSERT INTO Doctor (doctor_id, doctor_name, doctor_phone, doctor_speciality, hospital_id) VALUES
+(1, 'Dr. James Wilson', '111-111-1111', 'Cardiology', 1),
+(2, 'Dr. Emma Thompson', '222-222-2222', 'Pediatrics', 2),
+(3, 'Dr. Richard Brown', '333-333-3333', 'Neurology', 3),
+(4, 'Dr. Susan Clark', '444-444-4444', 'Oncology', 4),
+(5, 'Dr. William Davis', '555-555-5555', 'Orthopedics', 5),
+(6, 'Dr. Mary Johnson', '666-666-6666', 'Dermatology', 6),
+(7, 'Dr. Robert Lee', '777-777-7777', 'Gastroenterology', 7),
+(8, 'Dr. Patricia Moore', '888-888-8888', 'Endocrinology', 8),
+(9, 'Dr. Charles Taylor', '999-999-9999', 'Pulmonology', 9),
+(10, 'Dr. Elizabeth White', '000-000-0000', 'Rheumatology', 10);
+
+-- Drug Table (10 records)
+
+INSERT INTO Drug (drug_id, drug_name, drug_manufacturer, drug_category, drug_instructions, drug_RRP) VALUES
+(1, 'Aspirin', 'Bayer', 'Pain reliever', 'Take with food, 1-2 tablets every 4-6 hours', 9.99),
+(2, 'Amoxicillin', 'Pfizer', 'Antibiotic', 'Take 1 capsule every 8 hours for 7 days', 15.50),
+(3, 'Lisinopril', 'AstraZeneca', 'ACE inhibitor', 'Take 1 tablet daily with or without food', 12.75),
+(4, 'Metformin', 'Merck', 'Antidiabetic', 'Take 1 tablet twice daily with meals', 8.25),
+(5, 'Simvastatin', 'Novartis', 'Statin', 'Take 1 tablet daily in the evening', 18.99),
+(6, 'Levothyroxine', 'Abbott', 'Thyroid hormone', 'Take 1 tablet daily on an empty stomach', 11.50),
+(7, 'Omeprazole', 'GlaxoSmithKline', 'Proton pump inhibitor', 'Take 1 capsule daily before breakfast', 14.25),
+(8, 'Amlodipine', 'Sanofi', 'Calcium channel blocker', 'Take 1 tablet daily at the same time', 10.75),
+(9, 'Sertraline', 'Eli Lilly', 'Antidepressant', 'Take 1 tablet daily with or without food', 16.50),
+(10, 'Albuterol', 'Boehringer Ingelheim', 'Bronchodilator', 'Inhale 2 puffs every 4-6 hours as needed', 22.99);
+
+-- Pharmacy Table (10 records)
+
+INSERT INTO Pharmacy (pharmacy_id, pharmacy_name, pharmacy_address, pharmacy_phone) VALUES
+(1, 'Main Street Pharmacy', '100 Main St, Downtown, USA', '111-222-3333'),
+(2, 'Health Plus Drugstore', '200 Oak Ave, Uptown, USA', '444-555-6666'),
+(3, 'Community Care Pharmacy', '300 Elm St, Midtown, USA', '777-888-9999'),
+(4, 'Wellness Corner', '400 Pine Rd, Westside, USA', '123-456-7890'),
+(5, 'Family First Pharmacy', '500 Maple Ln, Eastside, USA', '987-654-3210'),
+(6, 'Quick Scripts', '600 Cedar Blvd, Northend, USA', '555-666-7777'),
+(7, 'Neighborhood Rx', '700 Birch St, Southend, USA', '333-444-5555'),
+(8, 'MediMart', '800 Spruce Ave, Northwest, USA', '888-999-0000'),
+(9, 'Reliable Drugs', '900 Fir Rd, Southeast, USA', '222-333-4444'),
+(10, 'Care & Cure Pharmacy', '1000 Redwood Ln, Southwest, USA', '666-777-8888');
+
+-- Prescription Table (10 records)
+
+INSERT INTO Prescription (prescription_id, prescription_date, prescription_priority_status, prescription_expiry_date, patient_id, doctor_id) VALUES
+(1, '2023-05-01', false, '2023-11-01', 1, 1),
+(2, '2023-05-02', true, '2023-06-02', 2, 2),
+(3, '2023-05-03', false, '2023-11-03', 3, 3),
+(4, '2023-05-04', false, '2023-11-04', 4, 4),
+(5, '2023-05-05', true, '2023-06-05', 5, 5),
+(6, '2023-05-06', false, '2023-11-06', 6, 6),
+(7, '2023-05-07', false, '2023-11-07', 7, 7),
+(8, '2023-05-08', true, '2023-06-08', 8, 8),
+(9, '2023-05-09', false, '2023-11-09', 9, 9),
+(10, '2023-05-10', false, '2023-11-10', 10, 10),
+(11, '2023-05-11', true, '2023-06-11', 1, 2),
+(12, '2023-05-12', false, '2023-11-12', 2, 3),
+(13, '2023-05-13', false, '2023-11-13', 3, 4),
+(14, '2023-05-14', true, '2023-06-14', 4, 5),
+(15, '2023-05-15', false, '2023-11-15', 5, 6);
+
+-- Order_tab Table (10 records)
+
+INSERT INTO Order_tab (prescription_id, drug_id, duration, frequency, Quantity) VALUES
+(1, 1, 30, 2, 60),
+(1, 2, 7, 3, 21),
+(2, 3, 90, 1, 90),
+(3, 4, 60, 2, 120),
+(4, 5, 30, 1, 30),
+(5, 6, 30, 1, 30),
+(6, 7, 30, 1, 30),
+(7, 8, 30, 1, 30),
+(8, 9, 30, 1, 30),
+(9, 10, 30, 4, 120),
+(10, 1, 30, 2, 60),
+(11, 2, 7, 3, 21),
+(12, 3, 90, 1, 90),
+(13, 4, 60, 2, 120),
+(14, 5, 30, 1, 30),
+(15, 6, 30, 1, 30),
+(2, 7, 30, 1, 30),
+(3, 8, 30, 1, 30),
+(4, 9, 30, 1, 30),
+(5, 10, 30, 4, 120);
+
+-- Pharmacy_Drug_listing Table (10 records)
+
+INSERT INTO Pharmacy_Drug_Listing (pharmacy_id, drug_id, quantity, price, expiration_date) VALUES
+(1, 1, 1000, 8.99, '2024-12-31'),
+(1, 2, 500, 14.50, '2024-06-30'),
+(1, 3, 750, 11.75, '2024-09-30'),
+(2, 4, 1000, 7.25, '2024-12-31'),
+(2, 5, 500, 17.99, '2024-06-30'),
+(2, 6, 750, 10.50, '2024-09-30'),
+(3, 7, 1000, 13.25, '2024-12-31'),
+(3, 8, 500, 9.75, '2024-06-30'),
+(3, 9, 750, 15.50, '2024-09-30'),
+(4, 10, 500, 21.99, '2024-06-30'),
+(4, 1, 800, 9.50, '2024-12-31'),
+(5, 2, 600, 15.00, '2024-06-30'),
+(5, 3, 700, 12.00, '2024-09-30'),
+(6, 4, 900, 8.00, '2024-12-31'),
+(6, 5, 550, 18.50, '2024-06-30'),
+(7, 6, 800, 11.00, '2024-09-30'),
+(7, 7, 950, 13.75, '2024-12-31'),
+(8, 8, 600, 10.25, '2024-06-30'),
+(9, 9, 700, 16.00, '2024-09-30'),
+(10, 10, 550, 22.50, '2024-06-30');
+
+-- Prescription_Drug_Order Table (10 records)
+
+INSERT INTO Prescription_Drug_Order (pharmacy_id, drug_id, prescription_id) VALUES
+(1, 1, 1),
+(1, 2, 2),
+(1, 3, 3),
+(2, 4, 4),
+(2, 5, 5),
+(2, 6, 6),
+(3, 7, 7),
+(3, 8, 8),
+(3, 9, 9),
+(4, 10, 10),
+(4, 1, 11),
+(5, 2, 12),
+(5, 3, 13),
+(6, 4, 14),
+(6, 5, 15),
+(7, 6, 1),
+(7, 7, 2),
+(8, 8, 3),
+(9, 9, 4),
+(10, 10, 5);
+
+
+############################################################  Queries & Statements  ####################################################
+
+-- 1. Retrieves the names, dates of birth, and gender of all patients in the Patient table.
+
+SELECT patient_name, patient_dob, patient_gender
+FROM Patient;
+
+-- 2. Lists the names, phone numbers, and addresses of all private hospitals.
+
+SELECT hospital_name, hospital_phone, hospital_address
+FROM Hospital
+WHERE hospital_is_private = True;
+
+-- 3. Retrieves the names and categories of all drugs that are manufactured by Pfizer.
+
+SELECT drug_name, drug_category 
+FROM Drug WHERE drug_manufacturer = 'Pfizer';
+
+-- 4. Lists the names of all doctors who specialize in Oncology.
+
+SELECT doctor_name 
+FROM Doctor 
+WHERE doctor_speciality = 'Oncology';
+
+-- 5. Retrieves the names and addresses of all pharmacies located in the 'Downtown' area.
+
+SELECT pharmacy_name, pharmacy_address 
+FROM Pharmacy 
+WHERE pharmacy_address LIKE '%Downtown%';
+
+-- 6. Calculates the average weight of all patients.
+
+SELECT AVG(patient_weight) 
+AS average_weight 
+FROM Patient;
+
+-- 7. Lists the names and prices of drugs that have a price higher than the average price across all pharmacies.
+
+SELECT drug_name, price
+FROM Pharmacy_Drug_Listing pdl
+INNER JOIN Drug d ON pdl.drug_id = d.drug_id
+WHERE price > (SELECT AVG(price) FROM Pharmacy_Drug_Listing);
+
+-- 8. Calculates the total quantity of drugs ordered for each prescription.
+
+SELECT prescription_id, SUM(Quantity) AS total_quantity
+FROM Order_tab
+GROUP BY prescription_id;
+
+-- 9. Calculates the total value of all drugs in each pharmacy based on the quantity and price.
+
+SELECT p.pharmacy_name, SUM(pdl.quantity * pdl.price) AS total_value
+FROM Pharmacy p
+INNER JOIN Pharmacy_Drug_Listing pdl ON p.pharmacy_id = pdl.pharmacy_id
+GROUP BY p.pharmacy_id, p.pharmacy_name;
+
+-- 10. Counts the number of patients for each gender.
+
+SELECT patient_gender, COUNT(*) AS patient_count
+FROM Patient
+GROUP BY patient_gender;
+
+-- 11. Lists all pharmacies that have Aspirin available, along with their inventory and sale price, ordered by price.
+
+SELECT p.pharmacy_name,
+		d.drug_name, 
+        pd.quantity AS inventory, 
+        pd.price AS sale_price
+FROM 
+	Pharmacy p INNER JOIN Pharmacy_Drug_Listing pd 
+    ON p.pharmacy_id = pd.pharmacy_id
+    INNER JOIN Drug d ON d.drug_id = pd.drug_id
+WHERE 
+	d.drug_name REGEXP 'Aspirin'
+ORDER BY pd.price;
+
+-- 12. Find the top 2 manufacturers who currently have the most available drugs (in terms of units) across all pharmacies.
+
+SELECT d.drug_manufacturer, SUM(pd.Quantity) AS total_inventory
+FROM 
+	Drug d INNER JOIN Pharmacy_Drug_Listing pd
+    ON d.drug_id = pd.drug_id
+GROUP BY d.drug_manufacturer
+ORDER BY total_inventory DESC
+LIMIT 2;
+
+-- 13. Lists each doctor along with the count of different drugs they have prescribed.
+
+SELECT d.doctor_name, COUNT(p.patient_id) AS total_patients
+FROM
+	Doctor d INNER JOIN Prescription pr 
+    ON d.doctor_id = pr.doctor_id
+    INNER JOIN Patient p ON p.patient_id = pr.patient_id
+GROUP BY d.doctor_name
+ORDER BY total_patients DESC;
+
+-- 14. Find the different kinds of drugs that each doctor has prescribed.
+
+SELECT d.doctor_id, d.doctor_name, COUNT(DISTINCT dr.drug_id) AS different_drugs
+FROM
+	Doctor d INNER JOIN Prescription pr
+    ON d.doctor_id = pr.doctor_id
+    INNER JOIN Order_tab o ON o.prescription_id = pr.prescription_id
+    INNER JOIN Drug dr ON dr.drug_id = o.drug_id
+GROUP BY d.doctor_id, d.doctor_name
+ORDER BY different_drugs DESC;
+
+-- 15. Groups patients into age ranges and calculates the number of different drugs they consume.
+
+SELECT tt.Age_range, COUNT(d.drug_id) AS Different_Drugs
+FROM Prescription pr INNER JOIN 
+	(
+    SELECT t.patient_id, t.patient_age,
+    CASE 
+        WHEN t.patient_age > 30 THEN 'Above 30 yrs old'
+    ELSE 'Under 30 yrs old'
+    END AS Age_range
+    FROM (
+      SELECT 
+            patient_id,
+            TIMESTAMPDIFF(YEAR, patient_dob, CURDATE()) AS patient_age
+        FROM 
+            Patient
+		) t
+    ) tt ON pr.patient_id = tt.patient_id
+    INNER JOIN Order_tab o ON o.prescription_id = pr.prescription_id
+    INNER JOIN Drug d ON d.drug_id = o.drug_id
+    GROUP BY tt.Age_range;
+
+-- 16. Finds the pharmacy with the highest average drug price.
+
+SELECT p.pharmacy_name, AVG(dl.price) AS avg_price
+FROM Pharmacy p INNER JOIN Pharmacy_Drug_Listing dl
+ON p.pharmacy_id = dl.pharmacy_id
+GROUP BY p.pharmacy_name
+ORDER BY avg_price DESC
+LIMIT 1;
+
+-- 17. Finds the pharmacy with the lowest average drug price.
+
+SELECT p.pharmacy_name, AVG(dl.price) AS avg_price
+FROM Pharmacy p INNER JOIN Pharmacy_Drug_Listing dl
+ON p.pharmacy_id = dl.pharmacy_id
+GROUP BY p.pharmacy_name
+ORDER BY avg_price ASC
+LIMIT 1;
+
+-- 18. Calculates the average price of drugs in each category across all pharmacies.
+
+SELECT d.drug_category, AVG(dl.price) AS avg_price
+FROM Drug d INNER JOIN Pharmacy_Drug_Listing dl
+ON d.drug_id = dl.drug_id
+GROUP BY d.drug_category
+ORDER BY avg_price DESC;
+
+#################################################### Challenging Queries #######################################################
+
+-- 19. Retrieves all prescribed drugs and their quantities for the patient named "David Lee."
+
+SELECT
+Patient.patient_name,
+Prescription.prescription_id,
+Prescription.prescription_date,
+Drug.drug_id,
+Drug.drug_name,
+Drug.drug_category,
+Drug.drug_instructions,
+Order_tab.Quantity
+
+FROM Patient
+INNER JOIN Prescription ON Patient.patient_id = Prescription.patient_id
+INNER JOIN Order_tab ON Prescription.prescription_id = Order_tab.prescription_id
+INNER JOIN Drug ON Order_tab.drug_id = Drug.drug_id
+
+WHERE Patient.patient_name = 'David Lee';
+
+-- 20. Checks if the pharmacies have enough stock of the prescribed drugs for "David Lee" and calculates any shortfall.
+
+SELECT 
+    Drug.drug_name,
+    CASE 
+        WHEN SUM(Pharmacy_Drug_Listing.quantity) >= SUM(Order_tab.Quantity) THEN 'Yes'
+        ELSE 'No'
+    END AS is_available,
+    CASE 
+        WHEN SUM(Pharmacy_Drug_Listing.quantity) < SUM(Order_tab.Quantity) 
+        THEN SUM(Order_tab.Quantity) - SUM(Pharmacy_Drug_Listing.quantity)
+        ELSE 0
+    END AS missing_quantity
+FROM 
+    Patient
+INNER JOIN 
+    Prescription ON Patient.patient_id = Prescription.patient_id
+INNER JOIN 
+    Order_tab ON Prescription.prescription_id = Order_tab.prescription_id
+INNER JOIN 
+    Drug ON Order_tab.drug_id = Drug.drug_id
+LEFT JOIN 
+    Pharmacy_Drug_Listing ON Drug.drug_id = Pharmacy_Drug_Listing.drug_id
+WHERE 
+    Patient.patient_name = 'David Lee'
+GROUP BY 
+    Drug.drug_name;
+
+--21. Checks if the pharmacies have enough stock of the prescribed drugs for "David Lee" and calculates any shortfall. 
+
+SELECT
+Order_tab.prescription_id,
+Order_tab.drug_id,
+Drug.drug_name, 
+Order_tab.Quantity,
+Pharmacy_Drug_Listing.pharmacy_id,
+Pharmacy.pharmacy_name, 
+Pharmacy_Drug_Listing.quantity
+FROM Order_tab
+INNER JOIN Drug ON Order_tab.drug_id = Drug.drug_id
+INNER JOIN Prescription ON Order_tab.prescription_id = Prescription.prescription_id
+INNER JOIN Patient ON Prescription.patient_id = Patient.patient_id
+INNER JOIN Pharmacy_Drug_Listing ON Order_tab.drug_id = Pharmacy_Drug_Listing.drug_id
+INNER JOIN Pharmacy ON Pharmacy_Drug_Listing.pharmacy_id = Pharmacy.pharmacy_id
+WHERE Patient.patient_name = 'David Lee';
+
+-- 22. Compares the prices and locations of pharmacies for the drugs prescribed to "David Lee" and provides the best (cheapest) options.
+
+SELECT 
+    Prescription.prescription_id,
+    Drug.drug_name,
+    Pharmacy.pharmacy_name,
+    Pharmacy.pharmacy_address,
+    Pharmacy.pharmacy_phone,
+    Pharmacy_Drug_Listing.price AS cheapest_price,
+    Order_tab.Quantity * Pharmacy_Drug_Listing.price AS total_cost_per_medication
+FROM 
+    Patient
+INNER JOIN 
+    Prescription ON Patient.patient_id = Prescription.patient_id
+INNER JOIN 
+    Order_tab ON Prescription.prescription_id = Order_tab.prescription_id
+INNER JOIN 
+    Drug ON Order_tab.drug_id = Drug.drug_id
+INNER JOIN 
+    Pharmacy_Drug_Listing ON Drug.drug_id = Pharmacy_Drug_Listing.drug_id
+INNER JOIN 
+    Pharmacy ON Pharmacy_Drug_Listing.pharmacy_id = Pharmacy.pharmacy_id
+WHERE 
+    Patient.patient_name = 'David Lee'
+    AND Pharmacy_Drug_Listing.price = (
+        -- Subquery to find the cheapest price for each drug
+        SELECT MIN(Pharmacy_Drug_Listing.price)
+        FROM Pharmacy_Drug_Listing
+        WHERE Pharmacy_Drug_Listing.drug_id = Drug.drug_id
+    )
+ORDER BY 
+    Drug.drug_name;
+
+-- 23. Calculates the total cost of the prescribed drugs for "David Lee" based on the cheapest available prices at various pharmacies.
+
+SELECT 
+    Prescription.prescription_id,
+    SUM(Order_tab.Quantity * Pharmacy_Drug_Listing.price) AS total_expense
+FROM 
+    Patient
+INNER JOIN 
+    Prescription ON Patient.patient_id = Prescription.patient_id
+INNER JOIN 
+    Order_tab ON Prescription.prescription_id = Order_tab.prescription_id
+INNER JOIN 
+    Drug ON Order_tab.drug_id = Drug.drug_id
+INNER JOIN 
+    Pharmacy_Drug_Listing ON Drug.drug_id = Pharmacy_Drug_Listing.drug_id
+WHERE 
+    Patient.patient_name = 'David Lee'
+    AND Pharmacy_Drug_Listing.price = (
+        -- Subquery to find the cheapest price for each drug
+        SELECT MIN(Pharmacy_Drug_Listing.price)
+        FROM Pharmacy_Drug_Listing
+        WHERE Pharmacy_Drug_Listing.drug_id = Drug.drug_id
+    )
+GROUP BY 
+    Prescription.prescription_id;
+
