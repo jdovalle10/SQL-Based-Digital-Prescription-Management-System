@@ -32,3 +32,7 @@ to pharmacies, which can be cumbersome, particularly if the required drugs are n
 **Data Privacy and Security:** All patient, doctor, and prescription data must be stored securely and accessed only by authorized users.
 
 **Patient Consent:** Patients must consent to share their prescription and order data with pharmacies and healthcare providers.
+
+## Relational Schema
+### Table: Patient
+Patient (patient_id, patient_name, patient_dob, patient_gender, patient_phone, patient_height, patient_weight, patient_address)
