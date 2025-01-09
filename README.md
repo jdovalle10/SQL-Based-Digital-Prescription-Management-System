@@ -8,6 +8,11 @@ to pharmacies, which can be cumbersome, particularly if the required drugs are n
 - Patient-Pharmacy Interaction: Patients can search for and order their prescribed drugs from nearby pharmacies, considering availability, pricing, and location.
 - Order Management: Orders are processed digitally, ensuring that patients receive their medications efficiently and can track their order status.
 
+## Users
+**Patients:** The primary users who will interact with the system to manage their prescriptions, search for drugs, and place orders.
+**Doctors:** Healthcare providers who will issue digital prescriptions and monitor patient medication histories.
+**Pharmacies:** Entities responsible for managing drug inventories and fulfilling patient orders.
+
 ## Business Processes
 **Prescription Management:** Doctors issue digital prescriptions that are securely stored and accessible to patients and pharmacies.
 
