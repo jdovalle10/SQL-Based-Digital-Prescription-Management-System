@@ -17,7 +17,7 @@ to pharmacies, which can be cumbersome, particularly if the required drugs are n
 
 **Order Management:** Orders are processed digitally, ensuring that patients receive their medications efficiently and can track their order status.
 
-## Users 
+## Major Business Rules 
 **Prescription Validation:** Patients must have a valid prescription from a licensed doctor to order medication.
 
 **Inventory Management:** Pharmacies must regularly update their drug inventories, including quantities, prices, and expiration dates.
