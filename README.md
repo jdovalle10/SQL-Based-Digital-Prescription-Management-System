@@ -16,3 +16,10 @@ to pharmacies, which can be cumbersome, particularly if the required drugs are n
 **Patient-Pharmacy Interaction:** Patients can search for and order their prescribed drugs from nearby pharmacies, considering availability, pricing, and location.
 
 **Order Management:** Orders are processed digitally, ensuring that patients receive their medications efficiently and can track their order status.
+
+## Users 
+**Prescription Validation:** Patients must have a valid prescription from a licensed doctor to order medication.
+**Inventory Management:** Pharmacies must regularly update their drug inventories, including quantities, prices, and expiration dates.
+**Order Fulfillment:** Pharmacies are required to fulfill orders accurately and within the stipulated timeframe.
+**Data Privacy and Security:** All patient, doctor, and prescription data must be stored securely and accessed only by authorized users.
+**Patient Consent:** Patients must consent to share their prescription and order data with pharmacies and healthcare providers.
