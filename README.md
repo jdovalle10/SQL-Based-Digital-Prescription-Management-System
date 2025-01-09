@@ -7,5 +7,4 @@ to pharmacies, which can be cumbersome, particularly if the required drugs are n
 **Prescription Management:** Doctors issue digital prescriptions that are securely stored and accessible to patients and pharmacies.
 **Pharmacy Coordination:** Pharmacies maintain real-time inventories of available drugs, including pricing and expiration details.
 **Patient-Pharmacy Interaction:** Patients can search for and order their prescribed drugs from nearby pharmacies, considering availability, pricing, and location.
-**Order Management:** Orders are processed digitally, ensuring that patients receive
-their medications efficiently and can track their order status.
+**Order Management:** Orders are processed digitally, ensuring that patients receive their medications efficiently and can track their order status.
